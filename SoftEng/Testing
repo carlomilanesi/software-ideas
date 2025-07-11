@@ -1,0 +1,29 @@
+# Testing
+
+## Hierarchy of tests
+
+Tests should be automatic, as much as possible. This means that the codebase should contain code whose only purpose is to run tests.
+
+Such tests can be started by persons or by other programs. When they are started by persons, the test runner displays clearly which tests have failed, if any. The test runner returns a success exit code when all the tests it has run were successful, and otherwise a failure exit code.
+
+Tests should be in a hierarchy. The possible levels are: unit tests, integration tests, system functional tests, system performance tests.
+
+First unit tests must be run. Only if all unit tests are successful, integration tests can be run, and so on up the hierarchy.
+
+The tests of the same level should be run in parallel, to optimize performance, with a maximum number of concurrent tests. For example, the limits could be: at most 8 concurrent unit tests, 4 concurrent component tests, 4 concurrent integration tests, 2 concurrent system functional tests, 1 concurrent system performance test.
+
+## Unit testing
+
+Unit tests are the ones in which the application has no dependencies on other systems. Every access to the file system, to the network, to the current time, and to other processes must be mocked through dependency injection. So, system under test is a set of source code (one or more functions), not an executable module.
+
+Unit tests should be written in the same programming language of the software under test.
+
+## Integration testing
+
+Integration tests are the ones in which the system under tests is a deployable executable file, i.e. an executable program or library. Its communication protocol is not mocked, but the communicating module are replaced by mock modules.
+
+It can be written in any programming language capable of capturing the input/output of such executable file.
+
+## System functional testing
+
+System tests (sometimes named "end-to-end testing") are the one in which the all the systems under tests are deployable in a testing environment. The test runner captures only the interaction with the outside world.
