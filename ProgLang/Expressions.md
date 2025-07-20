@@ -40,7 +40,7 @@ What should be considered is this:
 
 ## Specifying argument names at function calls
 
-In most programming languages, this is an allowed syntax to call a function: `f(12, 7)`. That function could be defined to have the first argument with name `x`, and the second argument with name `b`. At the call statement, such argument names could be displayed by the editor in a tooltip, but they are not shown in source code. Some languages allow to optionally specify the names of the arguments.
+In most programming languages, this is an allowed syntax to call a function: `f(12, 7)`. That function could be defined to have the first argument with name `x`, and the second argument with name `y`. At the call statement, such argument names could be displayed by the editor in a tooltip, but they are not shown in source code. Some languages allow to optionally specify the names of the arguments.
 
 Having function calls which display the names of the arguments is a big readability improvement, like when a structure is constructed by specifying the names of the fields, instead of just specifying a list of values.
 
@@ -48,10 +48,10 @@ Having function calls which display the names of the arguments is a big readabil
 
 Considering what is written above, I think that a good syntax is the following one.
 
-There is a syntax to specify the instance of a structure like this one: `{ a: 12, b: 7 }`. This structure can be assigned to a variable of the appropriate type.
+There is a syntax to specify the instance of a structure like this one: `( x: 12, y: 7 )`. This structure can be assigned to a variable of the appropriate type.
 
-In addition structure instance specification can be followed by the name of a function, like in this expression: `{ a: 12, b: 7 } f`. This expression is a call to the function `f`, passing as arguments `12` for the argument `a`, and `7` for the argument `b`.
+In addition structure instance specification can be followed by the name of a function, like in this expression: `( a: 12, b: 7 ) f`. This expression is a call to the function `f`, passing as arguments `12` for the argument `x`, and `7` for the argument `y`.
 
-Consider instead this expression: `{ arg: f } g`. This is a call to the function `g`, passing to it one argument, named `arg`, and having a reference to the `f` function as value.
+Consider instead this expression: `( func: f )g`. This is a call to the function `g`, passing to it one argument, named `func`, and having a reference to the `f` function as value.
 
-Consider instead this other expression: `{ arg: {} f } g`. To evaluate this expression, first the `f` function is called, with no arguments, and then the function `g` is called, passing to it the result of the call to `f`.
+Consider instead this other expression: `( func: ()f )g`. To evaluate this expression, first the `f` function is called, with no arguments, and then the function `g` is called, passing to it the result of the call to `f`.
