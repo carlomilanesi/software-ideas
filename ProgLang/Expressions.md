@@ -24,11 +24,34 @@ There are three reasonable choices:
 For example, let's assume we have a function named `f` with no arguments, and a function named `g` receiving as argument a reference to function.
 In addition, assume the symbol `@` prefixed to a function name means that we want to call that function, and symbol `&` prefixed to a function name means that we want to get a reference to that function.
 
-Using choice 1, the expression `@f @g` means "first call `f` and then call `g`, passing the result of the first call as argument.
-And the expression `f @g` means "call `g`, passing a reference to `f` as argument.
+Using choice 1, the expression `f g` means "first call `f`, and then call `g`, passing as argument the result of call to `f`.
+And the expression `&f g` means "call `g`, passing as argument a reference to `f`.
 
-Using choice 2, the expression `f g` means "first call `f` and then call `g`, passing the result of the first call as argument.
-And the expression `&f g` means "call `g`, passing a reference to `f` as argument.
+Using choice 2, the expression `@f @g` means "first call `f`, and then call `g`, passing as argument the result of the call to `f`.
+And the expression `f @g` means "call `g`, passing as argument a reference to `f`.
 
-Using choice 3, the expression `@f @g` means "first call `f` and then call `g`, passing the result of the first call as argument.
-And the expression `&f @g` means "call `g`, passing a reference to `f` as argument.
+Using choice 3, the expression `@f @g` means "first call `f`, and then call `g`, passing as argument the result of the call to `f`.
+And the expression `&f @g` means "call `g`, passing as argument a reference to `f`.
+
+What should be considered is this:
+* Conceptually, calling a function is something more complex than taking the reference to that function, and so it deserve a more complex notation, like in choice 2.
+* In typical applications, calls to functions are much more common than getting references to functions, and so choice 1 is a more concise notation.
+* In many languages, the decoration to specify a function call is just the pair of parentheses enclosing the possible arguments. Such parentheses are anyway useful for readability, to make clear where the list of arguments ends (for prefix notation) or begins (for postfix notation).
+
+## Specifying argument names at function calls
+
+In most programming languages, this is an allowed syntax to call a function: `f(12, 7)`. That function could be defined to have the first argument with name `x`, and the second argument with name `b`. At the call statement, such argument names could be displayed by the editor in a tooltip, but they are not shown in source code. Some languages allow to optionally specify the names of the arguments.
+
+Having function calls which display the names of the arguments is a big readability improvement, like when a structure is constructed by specifying the names of the fields, instead of just specifying a list of values.
+
+## Function call syntax
+
+Considering what is written above, I think that a good syntax is the following one.
+
+There is a syntax to specify the instance of a structure like this one: `{ a: 12, b: 7 }`. This structure can be assigned to a variable of the appropriate type.
+
+In addition structure instance specification can be followed by the name of a function, like in this expression: `{ a: 12, b: 7 } f`. This expression is a call to the function `f`, passing as arguments `12` for the argument `a`, and `7` for the argument `b`.
+
+Consider instead this expression: `{ arg: f } g`. This is a call to the function `g`, passing to it one argument, named `arg`, and having a reference to the `f` function as value.
+
+Consider instead this other expression: `{ arg: {} f } g`. To evaluate this expression, first the `f` function is called, with no arguments, and then the function `g` is called, passing to it the result of the call to `f`.
