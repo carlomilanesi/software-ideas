@@ -48,10 +48,51 @@ Having function calls which display the names of the arguments is a big readabil
 
 Considering what is written above, I think that a good syntax is the following one.
 
-There is a syntax to specify the instance of a structure like this one: `( x: 12, y: 7 )`. This structure can be assigned to a variable of the appropriate type.
+There is a syntax to specify the instance of a structure like this one: `( 12: x, 7: y )`. This structure can be assigned to a variable of the appropriate type.
 
-In addition structure instance specification can be followed by the name of a function, like in this expression: `( a: 12, b: 7 ) f`. This expression is a call to the function `f`, passing as arguments `12` for the argument `x`, and `7` for the argument `y`.
+In addition structure instance specification can be followed by the name of a function, like in this expression: `( 12: x, 7: y ) f`. This expression is a call to the function `f`, passing as arguments `12` for the argument `x`, and `7` for the argument `y`.
 
-Consider instead this expression: `( func: f )g`. This is a call to the function `g`, passing to it one argument, named `func`, and having a reference to the `f` function as value.
+Consider instead this expression: `( f: func ) g`. This is a call to the function `g`, passing to it one argument, named `func`, and having a reference to the `f` function as value.
 
-Consider instead this other expression: `( func: ()f )g`. To evaluate this expression, first the `f` function is called, with no arguments, and then the function `g` is called, passing to it the result of the call to `f`.
+Consider instead this other expression: `( () f: func ) g`. To evaluate this expression, first the `f` function is called, with no arguments, and then the function `g` is called, passing to it the result of the call to `f`.
+
+So, to perform an operation as simple as the sum of the two literal numbers `5` and `7`, while in most programming languages it is allowed to write simply `5 + 7`, with the notation described above it would be required to write `( 5: addend1, 7: addend2 ) add`. A possible alternative implementation is to use indentation, like this code:
+```
+    5: addend1
+    7: addend2
+add
+```
+
+For a bigger example, consider the following code in C++: `auto a = 5 + 7 * 12; auto b = 8 - 22 / 3`.
+
+It can be converted into this code:
+```
+    5: addend1
+        7: factor1
+        12: factor2
+    multiply: addend2
+add: a
+    8: minuend
+        22: dividend
+        3: divisor
+    divide: subtrahend
+subtract: b
+```
+
+A different notation should be used for overwriting an existing variable. For a example, consider the following code in C++: `auto a = 5 + 7 * 12; a = 8 - 22 / 3`.
+
+It can be converted into this code:
+```
+    5: addend1
+        7: factor1
+        12: factor2
+    multiply: addend2
+add: a
+    8: minuend
+        22: dividend
+        3: divisor
+    divide: subtrahend
+subtract -> a
+```
+
+So, the symbol `:` means that a new name is initialized. It can be a variable or a function argument. Instead, the symbol `->` means that an existing variable is reassigned.
