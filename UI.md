@@ -33,3 +33,35 @@
   * Accept the clipboard Paste command, only if the clipboard content can be converted to a number included in the allowed range.
   * Accept the clipboard Cut/Copy commands, converting the widget content into a string.
  
+# Common Defects of Interactive Applications
+
+This is a list of frequent inadequate appearence (look) or behavior (feel) of the user-interface of software applications:
+* There is a text or an icon which is intended to be a button, but it is not clear users can click or tap on it, and so they do not appear as buttons.
+* There is a button with a short text or an unusual icon, and no way to know the assumed behavior of such a button.
+* There is a widget which provides to the user no immediate feedback (visual, tactile, nor acoustic), when:
+  * it is hovered;
+  * it is pressed;
+  * it is clicked (i.e. pressed and released inside of it).
+* It is not apparent whether, for a widget, there is an application behavior when it is pressed, single-clicked, double-clicked, or triple-clicked. And in such a case, what is such a behavior.
+* If a click has a behavior, but the user wrongly or accidentally does a double-click, the operation is performed twice.
+* If a widget is disabled, there is no way to know why it is disabled, and how to enable it.
+* If an operation takes some time (say, more than 200 ms), there is no way to know when such an operation is done.
+* If an operation takes a long time (say, more than 4 seconds), there is no way:
+  * to know which operation is under way;
+  * to know which stage of the operation is under way;
+  * to know an estimate of the percentage of completion of the operation;
+  * to know an estimate of the remaining time for the completion of the operation;
+  * to pause this operation, and to resume it later;
+  * to abort this operation;
+  * to perform other operations which can be run concurrently with this operation.
+* It is not enough clear which window has the input focus.
+* It is not enough clear which widget of the active window has the input focus.
+* A text or an icon is too small, or too large, or two similar widgets have different sizes with no reason.
+* A text or an icon has too little contrast with respect to the background (like light gray on dark gray).
+* The window is resizable, but the contained widget do not resize nor they change their layout. This is typical of applications designed for a specific screen resolution and run on a screen with a different resolution.
+* Some stacked numbers are left-aligned.
+* A label and the corresponding widget are very far apart.
+* A number representing a measure displays no unit of measurement.
+* A number representing an amount of money displays no currency unit.
+* A widget meant to enter a number allows to enter non-numeric characters.
+* Some simple kinds of data validation are not performed by the user-interface. The data is sent to the application logic, which fails with a hard-to-understand error message.
