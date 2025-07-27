@@ -32,12 +32,24 @@
   * Have the string properties: `prefix`, `suffix`. Such strings are displayed inside the box, but they are not editable.
   * Accept the clipboard Paste command, only if the clipboard content can be converted to a number included in the allowed range.
   * Accept the clipboard Cut/Copy commands, converting the widget content into a string.
+* "Undo/Redo" Facility
+  * The application should have "undo/redo" commands for internal commands, i.e. for every normal command changing only the internal state. This means that the commands explicitly changing also the state of other applications or of the file system can be not undoable. Though, logging and autosave are not a good reason to avoid undoability.
+  * Sometimes, it is useful to have "undo/redo" commands even for external commands, i.e. command explicitly changing the state of other applications or of the file system. In such a case, probably it is better to have separate "undo/redo" commands, with respect to the "undo/redo" commands for internal commands.
+  * The undo/redo commands for the internal state should use the Command pattern to save in a memory structure the commands to undo and to redo a normal command. This usually requires much less space than saving a copy of the whole application state at every command.
+* "Autosave" Facility
+  * At every command, be them normal commands, "undo" commands, or "redo" commands, the application should save locally the current state of the application. Such a saved state is overwritten at every command. When the application starts, it looks for an autosaved state; if it is found, its last state is restored.
+  * To avoid slowing down the application, the autosave commands are run in a separate thread, which is aborted by any command. So, if, for example, the autosave command takes 2 seconds, the autosaved state is available only 2 seconds after the last command. To avoid discarding the last commands, the "exit" command must wait for the completion of the autosave command.
+  * Application could be run by fast typists, or by scripts which simulate user input at the fastest rate. To avoid continuously starting and aborting the autosave command, such autosave should start only after a small delay (say, 80 ms).
+  * To keep always at least one valid autosaved state, the autosave feature should create a new temporary file, and, if such a file is successfully created, use it to replace the previous autosaved state.
  
 # Common Defects of Interactive Applications
 
 This is a list of frequent inadequate appearence (look) or behavior (feel) of the user-interface of software applications:
-* There is a text or an icon which is intended to be a button, but it is not clear users can click or tap on it, and so they do not appear as buttons.
-* There is a button with a short text or an unusual icon, and no way to know the assumed behavior of such a button.
+* The application does not provide "undo/redo" commands, or provide them for only a single step.
+* The application "undo/redo" commands do not correspond one-to-one to the normal commands, i.e. one "undo" command undoes several normal commands, or several "undo" commands are needed to undo a single normal command.
+* The application "undo/redo" commands save the whole state of the application.
+* There is a text or an icon which is intended to be a button, but it is not clear whether users can click or tap on it, and so they do not appear as buttons.
+* There is a button with a short text or an uncommon icon, and no way to know the assumed behavior of such a button.
 * There is a widget which provides to the user no immediate feedback (visual, tactile, nor acoustic), when:
   * it is hovered;
   * it is pressed;
@@ -65,3 +77,4 @@ This is a list of frequent inadequate appearence (look) or behavior (feel) of th
 * A number representing an amount of money displays no currency unit.
 * A widget meant to enter a number allows to enter non-numeric characters.
 * Some simple kinds of data validation are not performed by the user-interface. The data is sent to the application logic, which fails with a hard-to-understand error message.
+* Usually spell-checkers display possibly wrong words as underlined by a colored squiggling line. Many programmers editors display possibly wrong portions of code as underlined by a colored squiggling line. Usually such checks starts automatically while the text is changed. Because such checks takes some time, until the check is complete, the previously wrong portions of text remains underlined as wrong, and the previously correct portions of text remains not underlined as correct. Instead they should be in an undetermined state.
