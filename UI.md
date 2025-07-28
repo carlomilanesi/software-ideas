@@ -45,36 +45,50 @@
 # Common Defects of Interactive Applications
 
 This is a list of frequent inadequate appearence (look) or behavior (feel) of the user-interface of software applications:
-* The application does not provide "undo/redo" commands, or provide them for only a single step.
-* The application "undo/redo" commands do not correspond one-to-one to the normal commands, i.e. one "undo" command undoes several normal commands, or several "undo" commands are needed to undo a single normal command.
-* The application "undo/redo" commands save the whole state of the application.
-* There is a text or an icon which is intended to be a button, but it is not clear whether users can click or tap on it, and so they do not appear as buttons.
-* There is a button with a short text or an uncommon icon, and no way to know the assumed behavior of such a button.
-* There is a widget which provides to the user no immediate feedback (visual, tactile, nor acoustic), when:
-  * it is hovered;
-  * it is pressed;
-  * it is clicked (i.e. pressed and released inside of it).
-* It is not apparent whether, for a widget, there is an application behavior when it is pressed, single-clicked, double-clicked, or triple-clicked. And in such a case, what is such a behavior.
-* If a click has a behavior, but the user wrongly or accidentally does a double-click, the operation is performed twice.
-* If a widget is disabled, there is no way to know why it is disabled, and how to enable it.
-* If an operation takes some time (say, more than 200 ms), there is no way to know when such an operation is done.
-* If an operation takes a long time (say, more than 4 seconds), there is no way:
-  * to know which operation is under way;
-  * to know which stage of the operation is under way;
-  * to know an estimate of the percentage of completion of the operation;
-  * to know an estimate of the remaining time for the completion of the operation;
-  * to pause this operation, and to resume it later;
-  * to abort this operation;
-  * to perform other operations which can be run concurrently with this operation.
-* It is not enough clear which window has the input focus.
-* It is not enough clear which widget of the active window has the input focus.
-* A text or an icon is too small, or too large, or two similar widgets have different sizes with no reason.
-* A text or an icon has too little contrast with respect to the background (like light gray on dark gray).
-* The window is resizable, but the contained widget do not resize nor they change their layout. This is typical of applications designed for a specific screen resolution and run on a screen with a different resolution.
-* Some stacked numbers are left-aligned.
-* A label and the corresponding widget are very far apart.
-* A number representing a measure displays no unit of measurement.
-* A number representing an amount of money displays no currency unit.
-* A widget meant to enter a number allows to enter non-numeric characters.
-* Some simple kinds of data validation are not performed by the user-interface. The data is sent to the application logic, which fails with a hard-to-understand error message.
-* Usually spell-checkers display possibly wrong words as underlined by a colored squiggling line. Many programmers editors display possibly wrong portions of code as underlined by a colored squiggling line. Usually such checks starts automatically while the text is changed. Because such checks takes some time, until the check is complete, the previously wrong portions of text remains underlined as wrong, and the previously correct portions of text remains not underlined as correct. Instead they should be in an undetermined state.
+* Regarding "undo/redo" facilities
+  * The application does not provide an "undo/redo" facility, or such facility is provided for only a single step, i.e. you cannot undo two connsecutive commands.
+  * The application "undo/redo" commands do not correspond one-to-one to the normal commands, i.e. one "undo" command undoes several normal commands, or several "undo" commands are needed to undo a single normal command. As an example, some editors, when you press Enter to split a line, first move the rest of the line at the beginning of the new line, and then the new line is automatically indented. It is a single command, but the first "undo" command undoes only the automatic indentation, and another "undo" command is needed to undo the line splitting command. As another example, some editors, it you type a word of several characters, and then you execute the "undo" command, the whole word is removed.
+  * The normal application commands, to be able to revert the application state to the previous value, always save the whole state of the application, which can be huge.
+* Regarding widgets to be clicked
+  * There is a text or an icon which is intended to be a button, but it does not look as a button, and so it is not clear whether users may click or tap on it.
+  * It is not apparent whether, for a widget, there is an application behavior when it is pressed, single-clicked, double-clicked, or triple-clicked.
+  * There is a widget with a short text or an icon, and no way to know the assumed behavior of such a widget.
+  * There is a widget which provides to the user no immediate feedback (visual, tactile, nor acoustic), when:
+    * it is hovered;
+    * it is pressed;
+    * it is clicked (i.e. pressed and released inside of it).
+  * If a single-click on a widget has a behavior, but the user wrongly or accidentally does a double-click, the operation is performed twice, i.e. there is no debounce interval.
+  * When a window or a widget is shown or is moved, it is immediately active, and so the user can click on it when meaning to click on another widget that was in that position some milliseconds before.
+  * If a widget is disabled, it does not look as disabled.
+  * If a widget is disabled, there is no way to know why it is disabled, and how to enable it.
+* Regarding long operation
+  * If an operation takes some time (say, more than 200 ms), there is no way to know whether such an operation is still running or it is done.
+  * If an operation takes a long time (say, more than 4 seconds), there is no way:
+    * to know which operation is under way;
+    * to know which stage of the operation is under way;
+    * to know an estimate of the percentage of completion of the operation;
+    * to know an estimate of the remaining time for the completion of the operation;
+    * to pause this operation, and to resume it later;
+    * to abort this operation;
+    * to perform other operations which can be run concurrently with this operation;
+    * to avoid performing other operations which shouldn't be run concurrently with this operation.
+* Regarding input focus
+  * It is not enough clear which window is active, i.e. it has the input focus.
+  * It is not enough clear which widget of the active window has the input focus.
+* Regarding layout
+  * A text or an icon is very small, or very large, or two similar widgets have different sizes with no reason.
+  * A text or an icon has too little contrast with respect to the background (like light gray on dark gray).
+  * The application is internationalized, and so the texts change in length when the language is changed, but the widgets do not move to make more room for longer texts or less room for shorter texts.
+  * The window is resizable, but the contained widget do not resize nor they change their layout. This is typical of applications designed for a specific screen resolution and run on a screen with a different resolution.
+  * Some stacked numbers are left-aligned.
+  * A label and the corresponding widget are very far apart.
+* Regarding numbers
+  * A number representing a measure displays no unit of measurement.
+  * A number representing an amount of money displays no currency unit.
+  * A widget meant to enter a number allows to enter non-numeric characters.
+* Regarding validation
+  * Some simple kinds of data validation are not performed by the user-interface. The data is sent to the application logic, which fails with a hard-to-understand error message.
+  * Only the first validation error is displayed. So, the user must correct it, submit the data, just to find that there is another validation error. In case of many errors, this is frustrating.
+  * The error messages cannot be copied into the clipboard.
+  * The error messages do not show where is the invalid value.
+  * Usually, spell-checkers display possibly wrong words as underlined by a colored squiggle. Similarly, many programmers editors display possibly wrong portions of code as underlined by a colored squiggle. Usually, such checks starts automatically while the text is changed. Because such checks takes some time, until the check is complete, the previously wrong portions of text remains underlined as wrong, even if they are now correct, and the previously correct portions of text remains not underlined as correct, even if they are now wrong. Instead, they should look in an undetermined state.
