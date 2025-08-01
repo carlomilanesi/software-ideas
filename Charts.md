@@ -50,3 +50,6 @@ Such available seat or car slot means that the resource is not saturated, and on
 
 An adjusted logarithmic chart can display with good detail the situation of almost unused resource, but it is inappropriate to display with enough detail the situation of almost full resource.
 To display appropriately such a case, the best chart is made computing the difference between two adjusted logarithmic charts; one, positive, is translated to have its zero at the zero point, and the other, negative, is translated to have its zero at the maximum point.
+
+The equation of the curve having this shaper is the following one, in which `M` is the maximum value, `0` (zero) is the minimum value, and `x` is the current value:
+y = M / 2 * (1 + (log(x + 1) - log(M + 1 - x)) / log(M + 1))
