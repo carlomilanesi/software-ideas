@@ -53,3 +53,11 @@ To display appropriately such a case, the best chart is made computing the diffe
 
 The equation of the curve having this shaper is the following one, in which `M` is the maximum value, `0` (zero) is the minimum value, and `x` is the current value:
 y = M / 2 * (1 + (log(x + 1) - log(M + 1 - x)) / log(M + 1))
+
+Here are the curves of the functions descrived before:
+![Chart functions](ChartFunctions.png)
+
+The green line is the curve of the function y = x
+The blue line is the curve of the function y = M / 2 * (1 + (log(x + 1) - log(M + 1 - x)) / log(M + 1))
+The violet line is the curve of the function y = M * log(x) / log(M)
+The black line is the curve of the function y = M * log(x + 1) / log(M + 1)
