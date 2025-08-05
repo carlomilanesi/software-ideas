@@ -59,7 +59,10 @@ y = M / 2 * (1 + (log(x + 1) - log(M + 1 - x)) / log(M + 1))
 Here are the curves of the functions described above:
 ![Chart functions](ChartFunctions.png)
 
-The green line is the curve of the function y = x
-The blue line is the curve of the function y = M / 2 * (1 + (log(x + 1) - log(M + 1 - x)) / log(M + 1))
-The violet line is the curve of the function y = M * log(x) / log(M)
-The black line is the curve of the function y = M * log(x + 1) / log(M + 1)
+The *green* line is the curve of the function *y = x*, used by *linear* charts.
+
+The *violet* line is the curve of the function *y = M * log(x) / log(M)*, used by *1-based logarithmic* charts.
+
+The *black* line is the curve of the function *y = M * log(x + 1) / log(M + 1)*, used by *0-based logarithmic* charts.
+
+The *blue* line is the curve of the function *y = M / 2 * (1 + (log(x + 1) - log(M + 1 - x)) / log(M + 1))*, used by *two-way logarithmic* charts.
