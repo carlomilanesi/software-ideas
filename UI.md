@@ -50,38 +50,41 @@ This is a list of frequent inadequate appearence (look) or behavior (feel) of th
   * The application "undo/redo" commands do not correspond one-to-one to the normal commands, i.e. one "undo" command undoes several normal commands, or several "undo" commands are needed to undo a single normal command. As an example, some editors, when you press Enter to split a line, first move the rest of the line at the beginning of the new line, and then the new line is automatically indented. It is a single command, but the first "undo" command undoes only the automatic indentation, and another "undo" command is needed to undo the line splitting command. As another example, some editors, it you type a word of several characters, and then you execute the "undo" command, the whole word is removed.
   * The normal application commands, to be able to revert the application state to the previous value, always save the whole state of the application, which can be huge.
 * Regarding widgets to be clicked
-  * There is a text or an icon which is intended to be a button, but it does not look as a button, and so it is not clear whether users may click or tap on it.
-  * It is not apparent whether, for a widget, there is an application behavior when it is pressed, single-clicked, double-clicked, or triple-clicked.
-  * There is a widget with a short text or an icon, and no way to know the assumed behavior of such a widget.
-  * There is a widget which provides to the user no immediate feedback (visual, tactile, nor acoustic), when:
+  * **Disguised buttons**: There is a text or an icon which is intended to be a button, but it does not look as a button, and so it is not clear whether users may click or tap on it.
+  * **Unclear available commands**: It is not apparent whether, for a widget, there is an application behavior when it is pressed, single-clicked, double-clicked, or triple-clicked.
+  * **Unclear behavior of commands**: There is a widget with a short text or an icon, and no way to know the assumed behavior of such a widget.
+  * **No immediate feedback**: There is a widget which provides to the user no immediate feedback (visual, tactile, nor acoustic), when:
     * it is hovered;
     * it is pressed;
     * it is clicked (i.e. pressed and released inside of it).
-  * If a single-click on a widget has a behavior, but the user wrongly or accidentally does a double-click, the operation is performed twice, i.e. there is no debounce interval.
-  * When a window or a widget is shown or is moved, it is immediately active, and so the user can click on it when meaning to click on another widget that was in that position some milliseconds before.
-  * If a widget is disabled, it does not look as disabled.
-  * If a widget is disabled, there is no way to know why it is disabled, and how to enable it.
-* Regarding long operation
-  * If an operation takes some time (say, more than 200 ms), there is no way to know whether such an operation is still running or it is done.
-  * If an operation takes a long time (say, more than 4 seconds), there is no way:
-    * to know which operation is under way;
-    * to know which stage of the operation is under way;
-    * to know an estimate of the percentage of completion of the operation;
-    * to know an estimate of the remaining time for the completion of the operation;
-    * to pause this operation, and to resume it later;
-    * to abort this operation;
-    * to perform other operations which can be run concurrently with this operation;
-    * to avoid performing other operations which shouldn't be run concurrently with this operation.
+  * **No debounce**: If a single-click on a widget has a behavior, but the user wrongly or accidentally does a double-click, the operation is performed twice, i.e. there is no debounce interval.
+  * **Immediate enabling**: When a window or a widget is shown or it is moved or it is enabled, it is immediately active, and so the user can click on it when meaning to click on another widget that was in that position some milliseconds before.
+  * **Unclear disabling**: If a widget is disabled, it does not look as disabled.
+  * **Unclear disabling reason**: If a widget is disabled, there is no way to know why it is disabled, and how to enable it.
+* Regarding long operations
+  * **No short-time processing feedback**. If an operation takes some time (say, more than 200 ms), there is no way to know whether such an operation is still running or it is done.
+  * **Regarding long-time processing feedback**: If an operation takes a long time (say, more than 4 seconds), there is no way to do this:
+    * **No "stuck" feedback**: To know whether the current operation is proceeding or it is stuck forever.
+    * **No current operation feedback**: To know which operation is under way.
+    * **No current stage feedback**: To know which stage of the operation is under way.
+    * **No advancement estimate**: To know an estimate of the percentage of completion of the operation.
+    * **No time-to-run estimate**: To know an estimate of the remaining time for the completion of the operation.
+    * **No pausing facility**: To pause this operation, and to resume it later.
+    * **No aborting facility**: To abort this operation.
+    * **No concurrent operation**: To perform other operations which can be run concurrently with this operation.
+    * **Incompatible concurrent operation**: To avoid performing other operations which shouldn't be run concurrently with this operation.
 * Regarding input focus
-  * It is not enough clear which window is active, i.e. it has the input focus.
-  * It is not enough clear which widget of the active window has the input focus.
+  * **Active desktop**: It is not enough clear which desktop is active, i.e. it has the input focus.
+  * **Active window**: It is not enough clear which window of the active desktop is active, i.e. it has the input focus.
+  * **Active widget**: It is not enough clear which widget of the active window is active, i.e. has the input focus.
+  * **Active character**: It is not enough clear the current position or the current selection inside the active widget.
 * Regarding layout
-  * A text or an icon is very small, or very large, or two similar widgets have different sizes with no reason.
-  * A text or an icon has too little contrast with respect to the background (like light gray on dark gray).
-  * The application is internationalized, and so the texts change in length when the language is changed, but the widgets do not move to make more room for longer texts or less room for shorter texts.
-  * The window is resizable, but the contained widget do not resize nor they change their layout. This is typical of applications designed for a specific screen resolution and run on a screen with a different resolution.
-  * Some stacked numbers are left-aligned.
-  * A label and the corresponding widget are very far apart.
+  * **Inappropriate widget size**: A text or an icon is very small, or very large, or two similar widgets have different sizes with no reason.
+  * **Inappropriate contrast**: A text or an icon has too little contrast with respect to the background (like light gray on dark gray).
+  * **Inappropriate internationalization**: The application is internationalized, and so the texts change in length when the language is changed, but the widgets do not move to make more room for longer texts or less room for shorter texts.
+  * **Non-reactive layout**: The window is resizable, but the contained widget do not resize nor they change their layout. This is typical of applications designed for a specific screen resolution and run on a screen with a different resolution.
+  * **Number alignment**: Some stacked numbers are left-aligned.
+  * **Label-widget association**: A label and the corresponding widget are very far apart.
 * Regarding numbers
   * A number representing a measure displays no unit of measurement.
   * A number representing an amount of money displays no currency unit.
