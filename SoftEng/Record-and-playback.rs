@@ -16,7 +16,7 @@
 //   [features]
 //   recording = []
 //   playback = []
-// 4. The command `cargo run` is quite similar to the example program described here: [https://doc.rust-lang.org/stable/book/ch02-00-guessing-game-tutorial.html].
+// 4. The command `cargo run` is quite similar to the example program described here: [The Rust Programming Language: Programming a Guessing Game](https://doc.rust-lang.org/stable/book/ch02-00-guessing-game-tutorial.html).
 // 5. The command `cargo run --features "recording"` has apparently a similar behavior, but actually it also creates a text file named `log.txt`. You can look at its contents.
 // 6. The command `cargo run --features "playback"` reads the file `log.txt`, and checks that the behavior of the application is exactly described by that file. It also prints a letter for every record read from that file.
 
