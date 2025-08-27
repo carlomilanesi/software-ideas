@@ -4,26 +4,26 @@
 
 ### When linear charts are appropriate
 
-Let's think of a chart which maps the temperatures of a place in a weather bullettin.
-Let's assume that in the range of values of that chart is [5, 36] °C.
+Let's think of a chart which maps the temperatures of a place in a weather bulletin.
+Let's assume that values in that chart are from 5°C to 36°C.
 
-It is quite reasonable that a temperature change from 5 to 6, a temperature change from 20 to 21, and a temperature change from 35 to 36 have the same importance.
+Let's consider three possible changes of temperature: from 5 to 6, from 20 to 21, and from 35 to 36. It is quite reasonable to assign to them the same importance.
 
-In such a case, the best kind of scale for such a chart is the linear scale, i.e. the scale in which the ratio of any difference in temperature to the distance of the represented points for such temperatures is constant.
+In such a case, the best kind of scale for the chart is the linear scale, i.e. the scale having a constant ratio of the difference in temperatures to the distance of the represented points for such temperatures.
 
 ### When logarithmic charts are appropriate
 
-Now, let's consider instead the yearly income of a population of persons or of business companies.
+Now, let's consider instead the yearly income of a population of persons.
 
 It is quite reasonable that the difference between the income of 10,000 and the income of 20,000 is much more important than the difference between the income of 210,000 and the income of 220,000.
 
-In the first difference, one person has an income which is the double of the income of another person. Such a difference can really change the standard of living of these needy persons.
+In the first difference, one person has an income which is the double of the income of another person. Such a difference can really change the standard of living of these needy person.
 
 Instead, in the second difference, the two standard of living of these affluent people can be considered quite the same.
 
 Therefore, a logarithmic chart would be more appropriate for such a case, than a linear chart.
 
-Though, there are two kinds of logarithmic chart:
+Though, there are two kinds of logarithmic charts:
 * **Real logarithimic**. The ones for which the zero value should be represented as minus infinite.
 * **Adjusted logarithimic**. The ones for which the zero value should be represented as zero.
 
