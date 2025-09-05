@@ -45,11 +45,20 @@
 # Common Defects of Interactive Applications
 
 This is a list of frequent inadequate appearence (look) or behavior (feel) of the user-interface of software applications:
-* Regarding "undo/redo" facilities
+* **Regarding internationalization**
+  * The application does not allow to set its current locale.
+  * The application does not use the system locale as the default current locale.
+  * The application has parts or all of its UI not internationalized or not properly localized.
+* **Regarding debugging**
+  * There is no unique way to determine the source code associated to a widget.
+  * There is no unique way to determine the source code associated to a UI text.
+  * There is no way or a cumbersome way to display a UI text in the language used by the developers, except by changing the application current locale.
+  * It is too easy to display a UI text in the language used by the developers, so that users are bothered by such texts.
+* **Regarding "undo/redo" facilities**
   * The application does not provide an "undo/redo" facility, or such facility is provided for only a single step, i.e. you cannot undo two connsecutive commands.
   * The application "undo/redo" commands do not correspond one-to-one to the normal commands, i.e. one "undo" command undoes several normal commands, or several "undo" commands are needed to undo a single normal command. As an example, some editors, when you press Enter to split a line, first move the rest of the line at the beginning of the new line, and then the new line is automatically indented. It is a single command, but the first "undo" command undoes only the automatic indentation, and another "undo" command is needed to undo the line splitting command. As another example, some editors, it you type a word of several characters, and then you execute the "undo" command, the whole word is removed.
   * The normal application commands, to be able to revert the application state to the previous value, always save the whole state of the application, which can be huge.
-* Regarding widgets to be clicked
+* **Regarding widgets to be clicked**
   * **Disguised buttons**: There is a text or an icon which is intended to be a button, but it does not look as a button, and so it is not clear whether users may click or tap on it.
   * **Unclear available commands**: It is not apparent whether, for a widget, there is an application behavior when it is pressed, single-clicked, double-clicked, or triple-clicked.
   * **Unclear behavior of commands**: There is a widget with a short text or an icon, and no way to know the assumed behavior of such a widget.
@@ -58,10 +67,10 @@ This is a list of frequent inadequate appearence (look) or behavior (feel) of th
     * it is pressed;
     * it is clicked (i.e. pressed and released inside of it).
   * **No debounce**: If a single-click on a widget has a behavior, but the user wrongly or accidentally does a double-click, the operation is performed twice, i.e. there is no debounce interval.
-  * **Immediate enabling**: When a window or a widget is shown or it is moved or it is enabled, it is immediately active, and so the user can click on it when meaning to click on another widget that was in that position some milliseconds before.
+  * **Immediate enabling**: When a window or a widget is shown or it is moved, it is immediately active, and so the user can click on it when meaning to click on another widget that was in that position some milliseconds before. Instead, every widget should be disabled for a short time, when it appears or it is moved.
   * **Unclear disabling**: If a widget is disabled, it does not look as disabled.
   * **Unclear disabling reason**: If a widget is disabled, there is no way to know why it is disabled, and how to enable it.
-* Regarding long operations
+* **Regarding long operations**
   * **No short-time processing feedback**. If an operation takes some time (say, more than 200 ms), there is no way to know whether such an operation is still running or it is done.
   * **Regarding long-time processing feedback**: If an operation takes a long time (say, more than 4 seconds), there is no way to do this:
     * **No "stuck" feedback**: To know whether the current operation is proceeding or it is stuck forever.
@@ -73,25 +82,35 @@ This is a list of frequent inadequate appearence (look) or behavior (feel) of th
     * **No aborting facility**: To abort this operation.
     * **No concurrent operation**: To perform other operations which can be run concurrently with this operation.
     * **Incompatible concurrent operation**: To avoid performing other operations which shouldn't be run concurrently with this operation.
-* Regarding input focus
-  * **Active desktop**: It is not enough clear which desktop is active, i.e. it has the input focus.
-  * **Active window**: It is not enough clear which window of the active desktop is active, i.e. it has the input focus.
+* **Regarding input focus**
+  * **Active window**: It is not enough clear which window is active, i.e. it has the input focus.
   * **Active widget**: It is not enough clear which widget of the active window is active, i.e. has the input focus.
   * **Active character**: It is not enough clear the current position or the current selection inside the active widget.
-* Regarding layout
+* **Regarding layout**
   * **Inappropriate widget size**: A text or an icon is very small, or very large, or two similar widgets have different sizes with no reason.
   * **Inappropriate contrast**: A text or an icon has too little contrast with respect to the background (like light gray on dark gray).
   * **Inappropriate internationalization**: The application is internationalized, and so the texts change in length when the language is changed, but the widgets do not move to make more room for longer texts or less room for shorter texts.
   * **Non-reactive layout**: The window is resizable, but the contained widget do not resize nor they change their layout. This is typical of applications designed for a specific screen resolution and run on a screen with a different resolution.
   * **Number alignment**: Some stacked numbers are left-aligned.
   * **Label-widget association**: A label and the corresponding widget are very far apart.
-* Regarding numbers
-  * A number representing a measure displays no unit of measurement.
-  * A number representing an amount of money displays no currency unit.
-  * A widget meant to enter a number allows to enter non-numeric characters.
-* Regarding validation
-  * Some simple kinds of data validation are not performed by the user-interface. The data is sent to the application logic, which fails with a hard-to-understand error message.
+* **Regarding widgets meant to enter number**
+  * It does not display the thousands separator according the system locale.
+  * It does not display the fractional part separator according the system locale.
+  * It display left-aligned values.
+  * It allows to enter non-numeric characters.
+  * It allows to enter numbers bigger than the maximum value.
+  * It allows to enter numbers smaller than the minimum value.
+  * If the minimumk value is positive or zero, it allows to enter the minus sign.
+  * It allows to enter more fractional digits than the maximum value of fractional digits.
+  * For a number representing a measure, no unit of measurement is displayed.
+  * For a number representing an amount of money, no currency unit is displayed.  
+* **Regarding validation**
+  * Some simple kinds of data validation are not performed by the user-interface. The data is sent to the application logic, which returns an error message.
+  * An error message is hard-to-understand, because it is addressed to developers.
+  * An error message contains little information usefult for developers, because it is addressed to end-user.
   * Only the first validation error is displayed. So, the user must correct it, submit the data, just to find that there is another validation error. In case of many errors, this is frustrating.
   * The error messages cannot be copied into the clipboard.
-  * The error messages do not show where is the invalid value.
-  * Usually, spell-checkers display possibly wrong words as underlined by a colored squiggle. Similarly, many programmers editors display possibly wrong portions of code as underlined by a colored squiggle. Usually, such checks starts automatically while the text is changed. Because such checks takes some time, until the check is complete, the previously wrong portions of text remains underlined as wrong, even if they are now correct, and the previously correct portions of text remains not underlined as correct, even if they are now wrong. Instead, they should look in an undetermined state.
+  * An error message regarding a value does not show where is the invalid value.
+* **Regarding concurrent validation**
+  Usually, spell-checkers display possibly wrong words as underlined by a colored squiggle. A similar behavior is done by many programmers editors regarding possibly wrong portions of code. Usually, such checks start automatically while the text is been changed. Because such checks take some time, the previously wrong portions of text remains underlined as wrong, even if they are now correct, until the check is complete. Similarly, the previously correct portions of text remains not underlined as correct, even if they are now wrong. Instead, during checks changed values should look in an undetermined state (or "sub judice").
+
