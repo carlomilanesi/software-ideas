@@ -71,7 +71,7 @@ This is a list of frequent inadequate appearence (look) or behavior (feel) of th
   * **Unclear disabling**: If a widget is disabled, it does not look as disabled.
   * **Unclear disabling reason**: If a widget is disabled, there is no way to know why it is disabled, and how to enable it.
 * **Regarding long operations**
-  * **No short-time processing feedback**. If an operation takes some time (say, more than 200 ms), there is no way to know whether such an operation is still running or it is done.
+  * **No short-time processing feedback**. If an operation takes a noticeable amount of time (say, more than 200 ms), there is no way to know whether such an operation is still running or it is done.
   * **Regarding long-time processing feedback**: If an operation takes a long time (say, more than 4 seconds), there is no way to do this:
     * **No "stuck" feedback**: To know whether the current operation is proceeding or it is stuck forever.
     * **No current operation feedback**: To know which operation is under way.
@@ -112,5 +112,8 @@ This is a list of frequent inadequate appearence (look) or behavior (feel) of th
   * The error messages cannot be copied into the clipboard.
   * An error message regarding a value does not show where is the invalid value.
 * **Regarding concurrent validation**
-  Usually, spell-checkers display possibly wrong words as underlined by a colored squiggle. A similar behavior is done by many programmers editors regarding possibly wrong portions of code. Usually, such checks start automatically while the text is been changed. Because such checks take some time, the previously wrong portions of text remains underlined as wrong, even if they are now correct, until the check is complete. Similarly, the previously correct portions of text remains not underlined as correct, even if they are now wrong. Instead, during checks changed values should look in an undetermined state (or "sub judice").
+  Usually, spell-checkers display possibly wrong words as underlined by a colored squiggle. A similar behavior is done by many programmers' editors, regarding possibly wrong portions of code. Usually, such checks start automatically as soon as the text is been changed. This feature may have the following defects:
+  * **Undeterminate state**. Because such checks take some time, the previously wrong portions of text remains underlined as wrong, even if they are now correct, until the check is complete. Similarly, the previously correct portions of text remains not underlined as correct, even if they are now wrong. Instead, until checks are complete, changed values should look in an undetermined state (or "sub judice").
+  * **High priority**. If the checks run at the same priority of the main UI thread, and they require many resources, the UI may be slowed down or even get stuck.
+  * **Immediate check**. If the check start immediately after a change is done, there is the following drawback. Assume the keys are typed by a very fast typist, or by some automation software, at a rate of hundreds per second. So, in such a case, for hundreds of times per second the check is started and aborted. This slows down the application.
 
