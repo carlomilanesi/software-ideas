@@ -19,9 +19,9 @@ Instead, in the so-called *static-typed languages*, like C, C++, Java, and Rust,
 Actually, this is not always true even for static-typed languages, because of the infamous null pointer, available in C, C++, Java, and unsafe Rust. If a pointer variable has value `null`, some operations on that pointer have no more meaning, an so its effective type is different than when the pointer is not null. But let's set aside this case.
 
 Here are the advantages of static typing over dynamic typing:
-1. **Type-safety**. A type determines which operations are allowed on a variable. If the compiler must be able to determine the type of a variable, it can be able also of determining which operations are avalailable on every variable. If the code contains an unavalailable operation, it is a programming error, and the compiler is able to detect such an error.
-2. **Memory performance**. A type determines how much memory can be used by a variable. If the compiler must be able to determine the type of a variable, it can be able also of determining how much memory to allocate for every variable. So, the compiler can allocate exactly the needed memory, often on the stack, which is way faster than the heap. If the compiler cannot detect the type of a variable, it can allocate only a small generic structure, containing a pointer to the actual data. The actual data is necessarily allocated in the heap at runtime, when the variable is created.
-3. **Speed performance**. A type determines the bit sequence used by a variable. If the compiler must be able to determine the type of a variable, it can be able also of determining which machine language operations to use to manipulate the bit sequence belonging to every variable. So, the compiler can generate exactly the needed machine code for every variable. If the compiler cannot detect the type of a variable, it must check the type of the variable at runtime, and jump to the machine code routine specific for that datatype.
+1. **Type-safety**. A type determines which operations are allowed on a variable. If the compiler must be capable of determining the type of a variable, it can determine which operations are avalailable on every variable. If the code contains an unavalailable operation, it is a programming error, and the compiler can detect such an error.
+2. **Memory performance**. A type determines how much memory can be used by a variable. If the compiler must be capable of determining the type of a variable, it can also determine how much memory to allocate for every variable. So, the compiler can allocate exactly the needed memory, often on the stack, which is way faster than the heap. If the compiler cannot detect the type of a variable, it can allocate only a small generic structure, containing a pointer to the actual data. The actual data is necessarily allocated in the heap at runtime, when the variable is created.
+3. **Speed performance**. A type determines the bit sequence used by a variable. If the compiler must be capable of determining the type of a variable, it can also determine which machine language operations to use to manipulate the bit sequence belonging to every variable. So, the compiler can generate exactly the needed machine code for every variable. If the compiler cannot detect the type of a variable, it must generate instructions which check the type of the variable at runtime, and jump to the machine code routine specific for that datatype.
 
 ## Advantages of algebraic datatypes
 
@@ -31,12 +31,55 @@ In most programming languages, there is also a data type feature, usually named 
 
 In not-so-many programming languages, enums are not restricted to be integer values, but in addition to a named integer tag, they can have any additional members. Such types are named *algebraic data types*.
 
+Algebraic data types allow to specify in a safe and efficient way cases in which a value can represent different unrelated types. The alternative implementation, used by object-oriented languages, is to have a base class and several derived classes; though, this is more verbose and not- so efficient.
+
+For example, consider the case in which there can be two events: a key pressed, specifying also which key has been pressed, and a mouse click, specifying also which mouse button has been clicked, and in which position.
+
+This can be expressed by the following object oriented code:
+
+```
+class Event {}
+
+class KeyPress: Event {
+    key: KeyCode,
+}
+
+class MouseClick: Event {
+    button: MouseButton,
+    x: int,
+    y: int,
+}
+
+if let key_event = event.downcast<KeyPress>() then ...
+else if let mouse_event = event.downcast<MouseClick>() then ...
+```
+
+Equivalently, this can be expressed by this code:
+
+```
+enum Event {
+    KeyPress {
+        key: KeyCode
+    }
+    MouseClick {
+        button: MouseButton,
+        x: int,
+        y: int,
+    }
+}
+
+match event {
+    KeyPress { key } => ...
+    MouseClick { button, x, y } => ...
+}
+```
+
 ## Advantages of subtypes
 
 In programming languages, a quite rare feature is that of subtype.
 
-Let's assume that in an application there is the need to have the types, UIEvent and KeyboardEvent.
-We have that every value of KeyboardEvent is also a valid value of UIEvent, and every operation supported by KeyboardEvent is also supported by the type UIEvent, with the same semantics.
+Let's assume that in an application there is the need to have the types `UIEvent` and `KeyboardEvent`.
+We have that every value of `KeyboardEvent` is also a valid value of `UIEvent`, and every operation supported by `KeyboardEvent` is also supported by the type `UIEvent`, with the same semantics.
 
 One way to implement this is to declare two distinct types, with their operations.
 This has these disadvantages:
