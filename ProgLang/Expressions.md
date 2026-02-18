@@ -6,9 +6,11 @@ The vast majority of programming languages use infix binary operators, like in t
 
 The only common exception is for method calls, like in `a.f(b)`, in which the function name is put after the first argument, and before all the other arguments.
 
-The disadvantage of the infix and of the prefix notations can appear, when the last expression is not a simple literal, like `3`, or a simple identifier, like `a`, but something much more complex, like `a + b * c / d * f(a)` or like `f(a, b, c, d, e)`. In such cases, the eye must first encounter the name of the operator or function to apply at last, and much later in the line it encounters its last operand. Though, all the operands must be evaluated before calling the function. So, the reading order is not the same as the evaluation order.
+The disadvantage of the infix and of the prefix notations can appear when the last expression is not a simple literal, like `3`, or a simple identifier, like `a`, but something much more complex, like `a + b * c / d * f(a)` or like `f(a, b, c, d, e)`. In such cases, the eye must first encounter the name of the operator or function to apply at last, and, much later in the line, it encounters its last operand. Though, all the operands must be evaluated before calling the function. So, the reading order is not the same as the evaluation order.
 
-Instead, it is easier to read code in which the reading order is the same as the evaluation order. This happens only in postfix notation. So, the following expressions are better: `a b +` instead of `a + b`, `and `x y f` instead of `f(x, y)` or `x.f(y)`.
+Instead, it is easier to read code in which the reading order is the same as the evaluation order. This happens only in postfix notation. So, the following expressions are better:
+* `a b +`, instead of `a + b` or `(+ a b)`;
+* `x y f`, instead of `f(x, y)` or `x.f(y)`.
 
 In addition, many languages have complex precedence rules for infix operators. Such rules can be overridden by using parentheses. Such rules are usually so complex to learn and so error prone, that many experts suggest to use parentheses anyway, to make clearer the precedence. Instead, postfix notation and prefix notation do not require any precedence rules nor parentheses to force precedence.
 
@@ -34,7 +36,7 @@ Using choice 3, the expression `@f @g` means "first call `f`, and then call `g`,
 And the expression `&f @g` means "call `g`, passing as argument a reference to `f`.
 
 What should be considered is this:
-* Conceptually, calling a function is something more complex than taking the reference to that function, and so it deserve a more complex notation, like in choice 2.
+* Conceptually, calling a function is something more complex than taking the reference to that function, and so it deserves a more complex notation, like in choice 2.
 * In typical applications, calls to functions are much more common than getting references to functions, and so choice 1 is a more concise notation.
 * In many languages, the decoration to specify a function call is just the pair of parentheses enclosing the possible arguments. Such parentheses are anyway useful for readability, to make clear where the list of arguments ends (for prefix notation) or begins (for postfix notation).
 
