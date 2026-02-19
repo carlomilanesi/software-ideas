@@ -48,19 +48,47 @@ There are ten types of numbers:
 * **Float**: IEEE 64-bit floating-point numbers.
 * **Decimal[F]**: These are 10 distinct types, with F going from 0 to 9. Each of these types represents numbers with F fractional decimal digits.
 
-There is no overlap between Float literals and Decimal literals. So, a numeric literal can be unambiguously detected as a Float or as a Decimal.
+There is no overlap between Float literals and Decimal literals. Every Float literal contains the letter "e", while no Decimal literal contains that letter. So, any numeric literal can be unambiguously detected as a Float or as a Decimal.
 
 ## Floats
 
 Floats can be combined in operations only with other Floats, and they can be assigned only to Float variables. To combine a Decimal with a Float, it must be explicitly previously converted to a Float.
 
-Float literals contain the letter "e" followed by an optional "-" and then an integer number. For example, the number 14.3 can be written as `0.143e2`, or as `1.43e1`, or as `14.3e0`, or as `143e-1`, or as `1430e-2`. The simplest way to write 0, is `0e0`.
+Decimal literals begin possibly by a minus sign, followed by one or more digits, followed possibly by a dot, followed possibly by some digits (for the fractional part), followed by the letter "e", followed possibly by a minus sign, followed by one or more digits. For example, the number 14.3 can be written as `0.143e2`, or as `1.43e1`, or as `14.3e0`, or as `143e-1`, or as `1430e-2`. The simplest way to write 0, is `0e0`.
 Their regex is `[\-][0-9]+[\.][0-9]*e[\-][0-9]+`.
 
 ## Decimals
 
-Decimals are fixed point numbers, implemented by a signed or unsigned integer number.
+Decimals are fixed point numbers, implemented by a signed integer number. For example, the number `23.456`, having type `Decimal[3]`, is implemented by the integer number 23456.
 
-Decimal literals begin with a digit or a minus sign, possibly contain a dot, and contain no letters. Some examples: `0`, `42`, `4.2`, `0004.20`, `-0000042`.
+Decimal literals begin possibly by a minus sign, followed by one or more digits, followed possibly by a dot, followed possibly by some digits (for the fractional part). These literals contain no letters. Some examples: `0`, `42`, `4.2`, `0004.20`, `-0000042`. Their regex is `[\-][0-9]+[\.][0-9]*`.
 
-Decimals can be combined in operations and assignments only with other decimals, possibly having a different number of integer digits, but only with the same number of fractional digits.
+In Decimal literals, the number of digits after the dot determine the type. For example, `3` is of type `Decimal[0]`, but `3.00` is of type `Decimal[2]`.
+
+Decimals can be combined in operations and assignments only with other Decimals. In addition, Decimals can be assigned only to Decimals of the same number of fractional digits, and they can be compared, added, or subtracted only with Decimals having the same number of fractional digits. Instead, the multiplication operation of two Decimals generates a Decimal whose number of fractional digits is the sum of the number fractional digits of the two operands; and the division and the remainder operations of two Decimals generates a Decimal whose number of fractional digits is the subtraction between the number fractional digits of the two operands.
+
+For example, while result of the division between `1.234e0` and `2.3e0` is `0.536521739`, the result of the division between `1.234` and `2.3` is `0.53`, because the first operand has three fractional digits, the second operand has one fractional digit, and so the result has 3-1=2 fractional digits. Such result is truncated towards zero.
+
+# Arrays
+
+The language defines only one list type, that allows a dynamic number of items, but the type of such items must be defined at compile-time, similarly to C++'s `std::vector` or Rust's `Vec`.
+
+This is the definition and initialization of an array variable, containing three strings, and of another array, containing one Float:
+```
+["one", "two", "three",] :strings
+[42e0,] :numbers
+```
+
+Notice that every item must be followed by a comma.
+
+# Dictionaries
+
+The language defines two dictionary types, one ordered and one unordered. They allows a dynamic number of key-value associations, but the type of keys and values must be defined at compile-time, similarly to C++'s `std::map` and `std::unordered_map` or Rust's `BTreeMap` and `HashMap`.
+
+This is the definition and initialization of an ordered dictionary variable, containing three Decimal-to-string associations, and of an unordered dictionary variable, containing one string-to-Float associations:
+```
+{< 1.00 "one", 2.00 "two", 3.00 "three",} :decimal_to_string
+{# "three" 3e0,} :strings_to_float
+```
+
+Notice that every item must be followed by a comma.
