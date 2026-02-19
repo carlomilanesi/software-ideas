@@ -92,3 +92,9 @@ This is the definition and initialization of an ordered dictionary variable, con
 ```
 
 Notice that every item must be followed by a comma.
+
+# Loops
+
+There two kinds of loops:
+* **do** loops, which iterate over an iterator.
+* **infinite loops**, which iterate forever, until a statement breaks out of the loop.
