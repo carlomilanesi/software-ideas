@@ -4,43 +4,48 @@
 * There are two possible commands, the *exclusive* ones and the *concurrent* ones:
   * The **exclusive** commands block the application until such commands are completed, failed or aborted. When they run, the only available command is "Suspend", which tries to put the current exclusive command into a *suspended* state. When an exclusive command is in suspended state, the only available commands are "Resume" and "Abort". An example of an exclusive command is the command to send the current document to a printer spooler, because until the whole document has been sent to the spooler, the user shouldn't be able to change the document, or close the application.
   * The **concurrent** commands allow the application to receive other commands. Such other commands could automatically abort, and possibly restart the running concorrent command. An example of a concurrent command is the spellcheck of a natural-language text, or the syntax check of program code in an editor, because the user can apply changes even if such checks are not yet completed.
-* Many developer believe that some commands are always quite fast, and other commands can last a long time. Actually, it is better to consider that every command can last a long time, because even commands that are usually quite fast can become very slow if the application or the whole system has become stucked or very slow for whatever reason.
-* To handle the case of a possibly-long exclusive command, and so, for every exclusive command:
+* Many developers believe that some commands are always quite fast, and other commands can last a long time. Actually, it is better to consider that every command can last a long time, because even commands that are usually quite fast can become very slow if the application or the whole system has become stucked or very slow for whatever reason.
+* This is the algorithm to follow to handle every _exclusive_ command (because every command should be treated as possibly long):
   * The application should show immediately that it has received such a command.
-  * After a short interval (say, 200 ms), if the command is not done yet, the application should display an icon representing that some processing is under way.
-  * After a longer period (say, 3 seconds), if the command is not done yet, the application should display a popup window containing:
+  * After a short interval (say, 200 ms), if the command is not done yet, the application should display a "busy" icon (as the mouse cursor, or drawn in the window, or both). Such icon represents that some processing is under way.
+  * After a longer period (say, 4 seconds), if the command is not done yet, the application should display a popup window containing:
     * A moving icon, representing that some processing is under way.
-    * An estimate of the completion percentage, as a progress bar, containing the percentage value.
+    * An estimate of the completion percentage, as a graphical progress bar, but also as the percentage value.
     * A possibly hierarchical description of the current stage.
     * An estimate of the remaining time, in hours, minutes, seconds.
-    * A "Suspended" checkbox, to put the command in suspended state. It is initially in unchecked state. When it is pressed, it becomes in indeterminate state, until the command is actually suspended. When the command is actually suspended, that checkbox becomes in checked state. When that button is pressed again, the command is resumed immediately, and the button becomes in unckecked state.
-    * An "Abort" button, enabled only when the "Suspended" checkbox is in checked state. It aborts the exclusive command.
-* For every concurrent command, the UI should should show whether the command is completed or not. For example, for a spellcheker, as soon as the check starts, the text to check is underlined in yellow, and when the check is completed the good text is no more underlined, and the bad text is underlined in red.
-* Every widget which can be used in these states:
-  * Enabled. This means that it is shown normally, and anything can be done on it.
-  * Disabled. This means that its contents cannot be changed, i.e. is read-only. It can be operated to scroll through it, to copy its contents, to ask for help about it. It should be displayed in a different way to make clear that it is disabled, but it should be easily readable, so dark gray on light gray is not acceptable.
-  * Visible. It is not shown, but is used by the layout manager.
-  * Collapsed. It is not shown, and it is not used by the layout manager.
-* Every time a widget appears or is moved, such widget should be disabled for a short time (say, 500 ms), to avoid accidental commands. If the whole window appears or is moved, all its widgets should have such short disabling.
-* Given that both the application logic and most databases have variable of numeric types, in addition to the alphanumeric types, also the user interface should support such type, having a specific widget for inputting numeric values. Such numeric input widgets should:
+    * A "Suspended" checkbox, to put the command in suspended state. It is initially in _unchecked_ state. When it is pressed, it becomes in _indeterminate_ state, until the command is actually suspended. When the command is actually suspended, that checkbox becomes in _checked_ state. When that button is pressed again, the command is resumed immediately, and the button becomes in _unckecked_ state.
+    * An "Abort" button, enabled only when the "Suspended" checkbox is in _checked_ state. It aborts the _exclusive_ command.
+* For every _concurrent_ command, the UI should should show whether the command is completed or not. For example, for a spellcheker, as soon as the check starts, the text to check is underlined in yellow, and when the check is completed, the text checked as good is no more underlined, and the text checked as bad is underlined in red.
+* It should be possible to put every widget in one of these states:
+  * **Enabled**. This means that it is shown normally, and anything can be done on it.
+  * **Disabled**. This means that its contents cannot be changed, i.e. it is read-only. It can be operated to scroll through it, to copy its contents, to ask for help about it. It should be displayed in a different way to make clear that it is disabled, but it should be easily readable, and so, dark gray on light gray is not an acceptable color combination.
+  * **Hidden**. It is not shown, but it is used by the layout manager.
+  * **Collapsed**. It is not shown, and it is not used by the layout manager.
+* The above one is a sequence of level, meaning that a collapsed widget behaves as also hidden and disabled, and a hidden widget behaves as also disabled.
+* Some widget are containers, i.e. they can contain other widgets. For example, whole windows, tabs, group boxes, panes. When a container widget is enabled, any of the widgets it contains can be in different states (some enabled, some disabled, some hidden, some collapsed). Though, when a container widget is disabled, hidden or collapsed, all the widgets it contains should have no more capabilities than if they were, respectively, disabled, hidden or collapsed. For example, if an enabled widget contains two widgets, one enabled and one collapsed, and such a container is disabled, the first contained widget starts to behave as disabled and the other remains collapsed; when such a container is enabled again, the first contained widget re-starts to behave as enabled and the other remains collapsed.
+* Every time a widget appears or is moved, such widget should be disabled for a short time (say, 300 ms), to avoid accidental commands. If the whole window appears or is moved, all its widgets should have such short disabling.
+* Given that both the variables of application logic and the columns of most databases have several numeric types, in addition to the alphanumeric types, also the user interface should support such types, having a specific widget for inputting numeric values. Such numeric input widgets should:
   * Have a look similar to alphanumeric input widgets.
-  * Display both the prompt and the value right-aligned.
-  * Receive and return numeric values, instead of string values.
-  * Automatically display thousands separators.
+  * Display both the prompt inside the empty widget and the value as right-aligned.
+  * Receive numeric values, instead of string values.
+  * Return numeric values or string values, with different getters.
+  * Use for keyboard input and for display the decimal separator specified by the current locale.
+  * Automatically display thousands separators, according the current locale.
   * Have the optional numeric properties: `min_value`, `max_value`. Any editing operation exceeding such limits will have no effects.
   * Have the Boolean properties: `min_value_allowed`, `max_value_allowed`. Specifies whether the above limits are included or excluded by the allowed range.
   * Have the string properties: `prefix`, `suffix`. Such strings are displayed inside the box, but they are not editable.
   * Accept the clipboard Paste command, only if the clipboard content can be converted to a number included in the allowed range.
   * Accept the clipboard Cut/Copy commands, converting the widget content into a string.
 * "Undo/Redo" Facility
-  * The application should have "undo/redo" commands for internal commands, i.e. for every normal command changing only the internal state. This means that the commands explicitly changing also the state of other applications or of the file system can be not undoable. Though, logging and autosave are not a good reason to avoid undoability.
+  * The application should have "undo/redo" commands for internal commands, i.e. for every normal command changing only the internal state. This means that the commands explicitly changing also the state of other applications or of the file system can be not undoable. Though, logging and autosave should not prevent undoability.
   * Sometimes, it is useful to have "undo/redo" commands even for external commands, i.e. command explicitly changing the state of other applications or of the file system. In such a case, probably it is better to have separate "undo/redo" commands, with respect to the "undo/redo" commands for internal commands.
   * The undo/redo commands for the internal state should use the Command pattern to save in a memory structure the commands to undo and to redo a normal command. This usually requires much less space than saving a copy of the whole application state at every command.
 * "Autosave" Facility
-  * At every command, be them normal commands, "undo" commands, or "redo" commands, the application should save locally the current state of the application. Such a saved state is overwritten at every command. When the application starts, it looks for an autosaved state; if it is found, its last state is restored.
-  * To avoid slowing down the application, the autosave commands are run in a separate thread, which is aborted by any command. So, if, for example, the autosave command takes 2 seconds, the autosaved state is available only 2 seconds after the last command. To avoid discarding the last commands, the "exit" command must wait for the completion of the autosave command.
-  * Application could be run by fast typists, or by scripts which simulate user input at the fastest rate. To avoid continuously starting and aborting the autosave command, such autosave should start only after a small delay (say, 80 ms).
-  * To keep always at least one valid autosaved state, the autosave feature should create a new temporary file, and, if such a file is successfully created, use it to replace the previous autosaved state.
+  * At every command, be it a normal commands, an _undo_ command, or a _redo_ command, the application should save locally the current state of the application. Such a saved state is overwritten at every command. When the application starts, it looks for a file containing such a state; if it is found, the last state of the application is restored.
+  * To avoid slowing down the application, the _autosave_ operations are run in a separate thread, which is aborted by any user command. So, if, for example, the autosave operation takes 2 seconds, the autosaved state is available only 2 seconds after the last command.
+  * To keep always at least one valid autosaved state, the _autosave_ operation should create a new temporary file, and, if such a file is successfully created, use it to replace the previous autosaved state.
+  * To avoid discarding the last commands, the "exit" command must wait for the completion of the possible pending _autosave_ operation.
+  * Applications could be run by fast typists, or by scripts which simulate user input at the fastest rate. To avoid continuously starting and aborting the _autosave_ operation, such operation should start only after a small delay (say, 80 ms).
  
 # Common Defects of Interactive Applications
 
