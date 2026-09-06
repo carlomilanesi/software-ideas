@@ -15,12 +15,16 @@ The numeric types defined by the languages like COBOL are appropriate for applic
 ## Number Types and Literals for Application Programming
 
 The types needed by application programming are these:
-* UnsignedNumber[I.F]: Positive or zero number with at most I integer decimal digits and F fractional decimal digits, with I and F numbers from 0 to 9. The internal representation can be compressed binary-coded decimal or binary fixed point. The second one is much more efficient.
+* UnsignedNumber[I.F]: Positive or zero number with at most I integer decimal digits and F fractional decimal digits, with I and F numbers from 0 to 9. The internal representation can be compressed binary-coded decimal or binary fixed point. The binary fixed point internal representation is much more efficient.
 * SignedNumber[I.F]: Similar to a UnsignedNumber, but supporting also negative numbers.
 * FloatingPointNumber: IEEE 64-bit floating-point number. This is needed for technical/scientific computations.
 
+For most kinds of application programming, 32-bit floating-point numbers and arbitrary precision numbers are not needed.
+In case they are actually needed, an external library should be used. The input and output of such a library would be done using the existing number types, or using strings of digits.
+
 Numeric literals can represent such types with no need of casting: 00034.980 represents an unsigned number with 5 integer digits and 3 fractional digits; +00034.980 represents the corresponding signed number; 2000e0 represents two-thousands as a floating-point number.
 
-For most kinds of application programming, 32-bit floating-point numbers and arbitrary precision numbers are not needed.
+It can be very inconvenient to specify in source code all the non-significant zeros. For example, if `a` is of type `UnsignedNumber[9.2]`, and we want to increment it by the value `1`, having the same type, we would be forced to write `a + 000000001.00`. In addition, if later we change the type of `a` to `UnsignedNumber[6.3]`, we are forced to change the code to `a + 000001.000`.
 
-In case they are actually needed, an external library should be used. The input and output of such a library would be done using the existing number types, or using strings of digits.
+So, for convenience, we can simply write `a + 1`. It means the sum of `a` with a value of type `UnsignedNumber[1.0]`. Such mixed-type operations cause automatic type conversion of the operands, to the most expressive type.
+For example, if a value of type `UnsignedNumber[8.1]` is added to a value of type `UnsignedNumber[5.3]`, first the two operands are converted to the type `UnsignedNumber[8.3]`.
