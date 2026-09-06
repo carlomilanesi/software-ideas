@@ -12,89 +12,77 @@ These are the advantages of using a programming language which forces programmer
 
 ## Advantages of static datatypes
 
-In the so-called *dynamic-typed languages*, like Python, JavaScript, or SmallTalk, any variable can be assigned first a value of numeric type, and then a value of string type. The type of any variable can change at any assignment to it.
+In the so-called *dynamic-typed languages*, like Python, JavaScript, or SmallTalk, any variable has no fixed type defined at compile time; such a variable can be assigned first a value of numeric type, and then a value of string type. The type of any variable can change at any assignment to it.
 
-Instead, in the so-called *static-typed languages*, like C, C++, Java, and Rust, if any variable is assigned first a value of numeric type, and then a value of string type, the compiler with certainly emit a compilation error. Any variable has a fixed datatype, determined at compilation time.
+Instead, in the so-called *static-typed languages*, like C, C++, Java, and Rust, every variable has a fixed type, determined at compile time; if such a variable is assigned first a value of numeric type, and then a value of string type, the compiler with certainly emit a compilation error.
 
-Actually, this is not always true even for static-typed languages, because of the infamous null pointer, available in C, C++, Java, and unsafe Rust. If a pointer variable has value `null`, some operations on that pointer have no more meaning, an so its effective type is different than when the pointer is not null. But let's set aside this case.
+Actually, this is not always true even for static-typed languages, because of the infamous null pointer, available in C, C++, Java, and unsafe Rust. If a pointer variable has value `null`, some operations on that pointer have no more meaning, an so its effective type is different than when the pointer is not null. But let's set aside such a case.
 
 Here are the advantages of static typing over dynamic typing:
-1. **Type-safety**. A type determines which operations are allowed on a variable. If the compiler must be capable of determining the type of a variable, it can determine which operations are avalailable on every variable. If the code contains an unavalailable operation, it is a programming error, and the compiler can detect such an error.
-2. **Memory performance**. A type determines how much memory can be used by a variable. If the compiler must be capable of determining the type of a variable, it can also determine how much memory to allocate for every variable. So, the compiler can allocate exactly the needed memory, often on the stack, which is way faster than the heap. If the compiler cannot detect the type of a variable, it can allocate only a small generic structure, containing a pointer to the actual data. The actual data is necessarily allocated in the heap at runtime, when the variable is created.
+1. **Type-safety**. A type determines which operations are allowed on a variable. If the compiler must be capable of determining the type of any variable, it can also determine which operations are available on every variable. If the code a call to an unavailable operation, such call is a programming error, and the compiler can detect such an error.
+2. **Memory performance**. A type determines how much memory can be used by a variable. If the compiler must be capable of determining the type of any variable, it can also determine how much memory to allocate for every variable. So, the compiler can allocate exactly the needed memory, often on the stack, which is way faster than the heap. If the compiler cannot detect the type of a variable, it can allocate only a small generic structure, capable of containing the data of some simple types, or a pointer to the actual data, allocated in the heap at runtime, when the variable is created.
 3. **Speed performance**. A type determines the bit sequence used by a variable. If the compiler must be capable of determining the type of a variable, it can also determine which machine language operations to use to manipulate the bit sequence belonging to every variable. So, the compiler can generate exactly the needed machine code for every variable. If the compiler cannot detect the type of a variable, it must generate instructions which check the type of the variable at runtime, and jump to the machine code routine specific for that datatype.
 
 ## Advantages of algebraic datatypes
 
-In very most programming languages, there is a data type feature, usually named "class" or "struct", in which an instance is a sequence of named fields, each having a specific datatype.
+In very most programming languages, there is a data type feature, usually named "class" or "struct", whose instances are sequences of named fields, each having a specific datatype. For example:
+```
+class Point {
+    x: Number;
+    y: Number;
+}
+```
 
-In most programming languages, there is also a data type feature, usually named "enum", in which an instance is a value belonging to a set of allowed named integer values.
+In most programming languages, there is also a data type feature, usually named "enum", whose instances are values belonging to a set of allowed named integer values. For example:
+```
+enum Direction {
+    North, // = 0
+    South, // = 1
+    West, // = 2
+    East, // = 3
+}
+```
 
-In not-so-many programming languages, enums are not restricted to be integer values, but in addition to a named integer tag, they can have any additional members. Such types are named *algebraic data types*.
+In not-so-many programming languages, enums are not restricted to be integer values. In addition to a named integer tag, they can have any additional members. Such types are named *algebraic data types*. For example:
+```
+enum Event {
+    Mouse {
+        button: Button;
+        position: Point;
+    },
+    Key {
+        keycode: Integer;
+    },
+    Activate,
+    Deactivate,
+}
+```
 
-Algebraic data types allow to specify in a safe and efficient way cases in which a value can represent different unrelated types. The alternative implementation, used by object-oriented languages, is to have a base class and several derived classes; though, this is more verbose and not- so efficient.
-
-For example, consider the case in which there can be two events: a key pressed, specifying also which key has been pressed, and a mouse click, specifying also which mouse button has been clicked, and in which position.
+Algebraic data types allow to specify in a safe and efficient way cases in which a value can represent different unrelated types. The alternative implementation, used by object-oriented languages, is to have a base class and several derived classes; though, such object-oriented architecture can be more verbose and less efficient.
 
 This can be expressed by the following object oriented code:
 
 ```
 class Event {}
 
-class KeyPress: Event {
-    key: KeyCode,
+class Key: Event {
+    keycode: Integer,
 }
 
-class MouseClick: Event {
-    button: MouseButton,
-    x: int,
-    y: int,
+class Mouse: Event {
+    button: Button;
+    position: Point;
 }
 
-if let key_event = event.downcast<KeyPress>() then ...
-else if let mouse_event = event.downcast<MouseClick>() then ...
+if let key_event = event.downcast<Key>() then ...
+else if let mouse_event = event.downcast<Mouse>() then ...
 ```
 
-Equivalently, this can be expressed by this code:
+Equivalently, using the enum, this can be expressed by this code:
 
 ```
-enum Event {
-    KeyPress {
-        key: KeyCode
-    }
-    MouseClick {
-        button: MouseButton,
-        x: int,
-        y: int,
-    }
-}
-
 match event {
-    KeyPress { key } => ...
-    MouseClick { button, x, y } => ...
+    Key { keycode } => ...
+    Mouse { button, position } => ...
 }
 ```
-
-## Advantages of subtypes
-
-In programming languages, a quite rare feature is that of subtype.
-
-Let's assume that in an application there is the need to have the types `UIEvent` and `KeyboardEvent`.
-We have that every value of `KeyboardEvent` is also a valid value of `UIEvent`, and every operation supported by `KeyboardEvent` is also supported by the type `UIEvent`, with the same semantics.
-
-One way to implement this is to declare two distinct types, with their operations.
-This has these disadvantages:
-* Every operation must be defined twice.
-* The infallible conversion of a KeyboardEvent to an UIEvent and the fallible conversion of a UIEvent to a KeyboardEvent must be defined explicitly.
-
-Another way is to use the object-oriented programming paradigm.
-A class defines the type UIEvent, and a class derived from it defines the type KeyboardEvent.
-This can be applied to structures, but not to enums.
-
-Another way is to add a field which specifies to which set the current istance belongs to.
-For example, the class UIEvent, can have the Boolean field `is_keyboard_event`.
-An alternative is to have the enum field `input_device`, having `Keyboard` as one of its variants.
-Also this one can be applied to structures, but not to enums.
-
-If there is an enum which describes all the possible UIEvents, it is useful to have another enum which describes all the possible KeyboardEvents.
-A way to implement this is to mark every variant of the enum UIEvents by a list of attributes which define to which other enums that variant belongs.
-Such other enums are subenums, that is a useful kind of subtyping.
