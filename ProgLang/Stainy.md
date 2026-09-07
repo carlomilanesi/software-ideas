@@ -14,32 +14,36 @@ So, it is a homage to the Rust programming language, as "stain" and "rust" are s
 Identifiers of types and type classes ("interfaces" or "traits" in other languages) must start with an uppercase letter.
 Every other identifier must start with a lowercase letter.
 The rest of the identifier must use *camel case*, like in Java language.
+For example, the code may contain a variable named `totalValue`, having type `GeneralValue`.
 
 Two identifiers in the same scope cannot differ only by capitalization of a non-initial letter.
-For example, it is allowed to have in the same scope the identifiers `Total`, `Totalvalue`, `total`, and `totalValue`, because the first two are types and the second two are not types.
+For example, it is allowed to have in the same scope the four identifiers `Total`, `Totalvalue`, `total`, and `totalValue`, because the first two are types and the second two are not types.
 Though, it is not allowed to have in the same scope the identifiers `totalvalue` and `totalValue`, because they are both non-types with very similar names.
 
 # Comments and attributes
 
-The portion of the line starting with `#` is considered a comment. There are no other types of comments.
+The portion of a line starting with `#` is considered a comment. There are no other types of comments.
 
-If a line starts with a single quote, it is an attribute applied to the following item.
+If a line starts with a single quote followed by a space, it is an attribute applied to the following item.
 Here are some examples of attributes:
 ```
-'if os = "Linux"
-''
+' if (os("Linux") arch("x86_64") not) and
+...
+'' Returns the absolute value of `a`.
+...
 ```
-The first one is a conditional compilation. It specify to process the following item only if the build directive "os" has value "Linux".
-The second one is a documentation comment for the following item.
+The first attribute is a conditional compilation. It specify to process the following item only if the build directive "os" has value "Linux" and the build directive "arch" has not value "x86_64".
+The second attribute is a documentation comment for the following item.
 
-If a line starts with a caret, it is an attribute applied to the containing item.
-Here are some examples of attributes:
+Outside any item, if a line starts with a single quote followed by a caret and a space, such an attribute is applied to the whole file.
+Here are some examples:
 ```
-^if os = "Linux"
-^'
+'^ if (os("Linux") arch("x86_64") not) and
+...
+''^ Module for relational databases.
 ```
-The first one is a conditional compilation. It specify to process the enclosing item only if the build directive "os" has value "Linux".
-The second one is a documentation comment for the enclosing item.
+The first attribute is a conditional compilation applied to the whole file.
+The second one is a documentation comment applied to the whole file.
 
 # Mutable and immutable objects
 
@@ -53,9 +57,11 @@ Here is the declaration and initialization of a mutable string variable named `t
 
 Structs must have explicit types.
 Here is the declaration of a struct type named `Person`, having as fields the floating-point member `distance` and the string member `town`:
+```
 struct Person
     distance Float
     town String
+```
 
 Here is the declaration and initialization of an immutable struct variable named `person`, having as fields the floating-point member `distance` and the string member `town`:
 ```
@@ -64,16 +70,6 @@ Person
     "London" :town
 :person
 ```
-
-Here is the declaration and initialization of an immutable struct variable named `person`, having as fields the floating-point member `distance` and the string member `town`:
-```
-    23.4e0 :distance
-    "London" :town
-:person
-```
-
-So, the syntax to define an immutable variable or structure field is: `<expression> :<variable name>`.
-And the syntax to define a mutable variable or structure field is: `<expression> ::<variable name>`.
 
 Structs are defined by their indentation.
 
