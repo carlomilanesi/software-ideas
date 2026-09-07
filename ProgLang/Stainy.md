@@ -5,9 +5,41 @@ The other documents in this folder explain its design choices.
 
 # Name of the language
 
-The name "Stainy" has been chosen simply because it looks like an English word, but it is not.
-It can be understood as "related to stain", like "brainy" from "brain", or "grainy" from "grain".
+The name "Stainy" has been chosen simply because it is easy to pronounce in English, but quite rare in usage.
+It can be understood as "related to stain".
 So, it is a homage to the Rust programming language, as "stain" and "rust" are semantically related.
+
+# Capitalization
+
+Identifiers of types and type classes ("interfaces" or "traits" in other languages) must start with an uppercase letter.
+Every other identifier must start with a lowercase letter.
+The rest of the identifier must use *camel case*, like in Java language.
+
+Two identifiers in the same scope cannot differ only by capitalization of a non-initial letter.
+For example, it is allowed to have in the same scope the identifiers `Total`, `Totalvalue`, `total`, and `totalValue`, because the first two are types and the second two are not types.
+Though, it is not allowed to have in the same scope the identifiers `totalvalue` and `totalValue`, because they are both non-types with very similar names.
+
+# Comments and attributes
+
+The portion of the line starting with `#` is considered a comment. There are no other types of comments.
+
+If a line starts with a single quote, it is an attribute applied to the following item.
+Here are some examples of attributes:
+```
+'if os = "Linux"
+''
+```
+The first one is a conditional compilation. It specify to process the following item only if the build directive "os" has value "Linux".
+The second one is a documentation comment for the following item.
+
+If a line starts with a caret, it is an attribute applied to the containing item.
+Here are some examples of attributes:
+```
+^if os = "Linux"
+^'
+```
+The first one is a conditional compilation. It specify to process the enclosing item only if the build directive "os" has value "Linux".
+The second one is a documentation comment for the enclosing item.
 
 # Mutable and immutable objects
 
@@ -15,11 +47,25 @@ At compile time, every object is clearly defined as mutable or immutable.
 The language requires that every variable is declared as mutable or as immutable.
 Every variable must be initialized to a value, which defines its type.
 
-Here is the declaration and initialization of an immutable floating-point variable named `distance`, having `23.4` as value: `23.4e0 :distance`.
+Here is the declaration and initialization of an immutable 64-bit floating-point variable, named `distance`, having `23.4` as its value: `23.4e0 :distance`.
 
-Here is the declaration and initialization of a mutable string variable named `town`, having `London` as value: `"London" :>town`.
+Here is the declaration and initialization of a mutable string variable named `town`, having `London` as its initial value: `"London" ::town`.
 
-Here is the declaration and initialization of an immutable struct variable named `person`, having as fields a floating-point `distance` and a string `town`:
+Structs must have explicit types.
+Here is the declaration of a struct type named `Person`, having as fields the floating-point member `distance` and the string member `town`:
+struct Person
+    distance Float
+    town String
+
+Here is the declaration and initialization of an immutable struct variable named `person`, having as fields the floating-point member `distance` and the string member `town`:
+```
+Person
+    23.4e0 :distance
+    "London" :town
+:person
+```
+
+Here is the declaration and initialization of an immutable struct variable named `person`, having as fields the floating-point member `distance` and the string member `town`:
 ```
     23.4e0 :distance
     "London" :town
@@ -27,7 +73,6 @@ Here is the declaration and initialization of an immutable struct variable named
 ```
 
 So, the syntax to define an immutable variable or structure field is: `<expression> :<variable name>`.
-
 And the syntax to define a mutable variable or structure field is: `<expression> ::<variable name>`.
 
 Structs are defined by their indentation.
@@ -71,19 +116,30 @@ For example, while result of the division between `1.234e0` and `2.3e0` is `0.53
 
 # Arrays
 
-The language defines only one list type, that allows a dynamic number of items, but the type of such items must be defined at compile-time, similarly to C++'s `std::vector` or Rust's `Vec`.
+The language defines only one list type, that allows a dynamic number of items, with the type of such items which must be defined at compile-time, similarly to C++'s `std::vector` or Rust's `Vec`.
 
-This is the definition and initialization of an array variable, containing three strings, and of another array, containing one Float:
+This is the definition and initialization of an immutable array variable, containing three strings, and of a mutable array, initially containing one Float:
 ```
 ["one", "two", "three",] :strings
-[42e0,] :numbers
+[42e0,] ::numbers
 ```
 
 Notice that every item must be followed by a comma.
+The types of such arrays is inferred.
+
+Here are some statements which manipulate such arrays.
+```
+(strings 1) get # returns the second element of `strings`, panics if there is not such an element
+(numbers 0 1.2e0) set # assigns the value `1.2` to the first element of `numbers`, panics if there is not such an element
+(numbers 2.3e0) push # adds an element, having value `2.3`, at the end of the array `numbers`
+(numbers) pop # removes and returns the last element of `numbers`, panics if there is not such an element
+
+```
+
 
 # Dictionaries
 
-The language defines two dictionary types, one ordered and one unordered. They allows a dynamic number of key-value associations, but the type of keys and values must be defined at compile-time, similarly to C++'s `std::map` and `std::unordered_map` or Rust's `BTreeMap` and `HashMap`.
+The language defines two dictionary types, one ordered and one unordered. They allow a dynamic number of key-value associations, but the type of keys and values must be defined at compile-time, similarly to C++'s `std::map` and `std::unordered_map` or Rust's `BTreeMap` and `HashMap`.
 
 This is the definition and initialization of an ordered dictionary variable, containing three Decimal-to-string associations, and of an unordered dictionary variable, containing one string-to-Float associations:
 ```
@@ -95,6 +151,9 @@ Notice that every item must be followed by a comma.
 
 # Loops
 
-There two kinds of loops:
-* **do** loops, which iterate over an iterator.
+There are two kinds of loops:
+* **do-loops**, which iterate over an iterator.
 * **infinite loops**, which iterate forever, until a statement breaks out of the loop.
+Here is an example of a do-loop:
+0:9 => 
+    
