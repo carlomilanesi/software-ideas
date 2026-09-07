@@ -87,9 +87,29 @@ These cases of assignment are possible at compile-time:
 
 There are ten types of numbers:
 * **Float**: IEEE 64-bit floating-point numbers.
-* **Decimal[F]**: These are 10 distinct types, with F going from 0 to 9. Each of these types represents numbers with F fractional decimal digits.
+* **Decimal[F]**: These are 10 distinct types, with F going from 0 to 9. Each of these types represents numbers with F fractional decimal digits. If F is zero, they are integer numbers; otherwise, they are fixed-point numbers.
 
 There is no overlap between Float literals and Decimal literals. Every Float literal contains the letter "e", while no Decimal literal contains that letter. So, any numeric literal can be unambiguously detected as a Float or as a Decimal.
+
+`Float`s are implemented as in any other programming language, because their purpose is the perform computations with top speed.
+
+`Decimal`s are implemented as signed 64-bit integers. For example, 12.3456 is implemented as the 64-bit integer 123456.
+
+Input and conversion from Floats are implemented by multiplying the number by its corresponding power of ten.
+
+Output and conversion to Floats are implemented by dividing the number by its corresponding power of ten.
+
+Addition and subtraction between `Decimal`s of the same type is implemented as the addition and the subtraction between their implementations. For example, to add an amount of $ 12.30 to an amount of $ 5.63, the machine-language operation `1230 + 563` is performed.
+
+Addition and subtraction between `Decimal`s of the different types is not allowed. Explicit type conversion is needed.
+
+Multiplication between `Decimal`s of the different types is always allowed, and it is implemented as the multiplication between their implementations.
+The result of a multiplication has a number of fractional digits which is the sum of the fractional digits of the operands.
+For example, to multiply a price per kilogram of $ 12.30 (with F = 2) by a weight of kg 7.356 (with F = 3), the machine-language operation `1230 * 7356` is performed, obtaining 9047880, which represents the number $ 90.47880  (with F = 5).
+
+Division between `Decimal`s of the different types is always allowed, and it is implemented as the multiplication of the implementation of the dividend by its power of 10, followed by the integer division by the implementation of the divisor.
+The result of a division has a number of fractional digits which is the sum of the fractional digits of the operands.
+For example, to divide an amount of $ 90.47 (with F = 2) by a weight of kg 7.3 (with F = 1), the machine-language integer operation `9047 * 100 / 73` is performed, obtaining 12393, which represents the number $ 12,393  (with F = 3).
 
 ## Floats
 
@@ -131,7 +151,6 @@ Here are some statements which manipulate such arrays.
 (numbers) pop # removes and returns the last element of `numbers`, panics if there is not such an element
 
 ```
-
 
 # Dictionaries
 
