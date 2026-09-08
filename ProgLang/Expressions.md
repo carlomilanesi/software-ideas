@@ -1,22 +1,40 @@
 # Syntax of expressions
 
-## Use postfix notation
+## Postfix notation
 
 The vast majority of programming languages use infix binary operators, like in the expression `a + b`, and prefix function call, like in `f(x)` or `(f x)` or simply `f x`.
 
 The only common exception is for method calls, like in `a.f(b)`, in which the function name is put after the first argument, and before all the other arguments.
 
-The disadvantage of the infix and of the prefix notations can appear when the last expression is not a simple literal, like `3`, or a simple identifier, like `a`, but something much more complex, like `a + b * c / d * f(a)` or like `f(a, b, c, d, e)`. In such cases, the eye must first encounter the name of the operator or function to apply at last, and, much later in the line, it encounters its last operand. Though, all the operands must be evaluated before calling the function. So, the reading order is not the same as the evaluation order.
+The disadvantage of the infix and of the prefix notations appears in expression like this ones: `f(g())`. In such a case, first the function `g` must be called, and then function `f`. The eye, moving from left to right, first encounters the name of the function to call last. So, the reading order is not the same as the evaluation order.
 
-Instead, it is easier to read code in which the reading order is the same as the evaluation order. This happens only in postfix notation. So, the following expressions are better:
+Infix operators with precedence have other additional disadvantages:
+* Sometimes a difference order of evaluation is needed, and so parentheses must be used to force the desired order.
+* In many languages precedence rules are so complex that many developers prefer to add parentheses to make sure the actual order is the desired one, even if they are not needed.
+
+Instead, it is easier to read code in which the reading order is the same as the evaluation order, no precedence rules are needed, and no parentheses to force precedence are needed. This happens only in postfix notation. So, the following expressions are better:
 * `a b +`, instead of `a + b` or `(+ a b)`;
 * `x y f`, instead of `f(x, y)` or `x.f(y)`.
 
-In addition, many languages have complex precedence rules for infix operators. Such rules can be overridden by using parentheses. Such rules are usually so complex to learn and so error prone, that many experts suggest to use parentheses anyway, to make clearer the precedence. Instead, postfix notation and prefix notation do not require any precedence rules nor parentheses to force precedence.
+Such syntax is actually used by the two most famous postfix languages, Forth and PostScript.
+
+## Avoiding explicit stack 
+
+The most famous postfix languages, Forth and PostScript, make explicit use of the process stack. For example, the code `11 22 33 +` means "push on the stack the values 11, 22, 33, and then call the `+` operation on the two top values of the stack, leaving on the stack the initial first value, 11, and the result of the addition, 55.
+
+This two languages are strictly stack-based, and this is rather error-prone and not very readable.
+For example, for the expression `11 22 33 +`, it is not clear whether the value `11` is actually needed later or it is an error, and how many operators are used by the `+` operator.
+
+A possible variant to the language is to enclose the arguments in parentheses, in this way: `11 (22 33 +)`, or in this way: `11, (22, 33)+`.
+The first notation is LISP-like, but postfix.
+The second notation is Pascal-like, but postfix.
+
+Such notations improve readability, because it is clear which are the arguments of the call to `+`; they are more robust, because if the wrong number of arguments is passed, a parsing error is generated; and the result parsing error message can be more clear.
 
 ## Functions calls vs function references
 
-In every non-trivial programming language, a function can receive as argument a reference to a function. So, whenever the name of a function with no arguments is encountered, it is needed some syntax to distinguish the case in which we want _to call that function_, from the case in which we want _to pass a reference to that function_.
+In every non-trivial programming language, a function can receive as argument one or more references to functions.
+So, whenever the name of a function with no arguments is encountered, it is needed some syntax to distinguish the case in which we want _to call that function_, from the case in which we want _to pass a reference to that function_.
 
 There are three reasonable choices:
 1. To use just the name of the function to specify a call, and a decoration to specify a reference.
@@ -39,6 +57,20 @@ What should be considered is this:
 * Conceptually, calling a function is something more complex than taking the reference to that function, and so it deserves a more complex notation, like in choice 2.
 * In typical applications, calls to functions are much more common than getting references to functions, and so choice 1 is a more concise notation.
 * In many languages, the decoration to specify a function call is just the pair of parentheses enclosing the possible arguments. Such parentheses are anyway useful for readability, to make clear where the list of arguments ends (for prefix notation) or begins (for postfix notation).
+
+## Object-orientation
+
+In object-oriented languages, functions (named "methods") have an automatic scope defined by the type of the first argument.
+For example, the expression `a.f(b)` means "call the function `f` defined for the type of `a`, and pass to such a functions two arguments: the value of `a` and the value of `b`".
+So, the first argument is prefix, but the possible other arguments are postfix.
+
+Even object-oriented languages have functions that are not methods. For pure object-oriented languages, they are named "class methods" or "static member functions", but for hybrid languages have also free-standing function, i.e. not encapsulated in classes.
+
+In a completely postfix language, a syntax like `(a b)f` is ambiguous, because it could mean:
+* Call the method `f` of the object `a`, and pass also the argument `b` to such a call.
+* Call the free-standing function `f` with the two arguments `a` and `b`.
+
+To avoid such ambiguity, the method call can have the syntax `a(b)f`.
 
 ## Specifying argument names at function calls
 
